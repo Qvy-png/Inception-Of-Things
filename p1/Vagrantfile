@@ -8,22 +8,24 @@
 Vagrant.configure("2") do |config|
 
   config.vm.define "rdel-aguS" do |server|
-    server.vm.box = "ubuntu/bionic64"
+    server.vm.box = "debian/bookworm64"
     server.vm.hostname = "rdel-agu.S"
     server.vm.network "private_network", ip: "192.168.56.110"
     server.vm.provider "virtualbox" do |vb|
       vb.memory = "512"
       vb.cpus = 1
+      vb.customize ["modifyvm", :id, "--name", "rdel-aguS"]
     end
   end
 
   config.vm.define "rdel-aguSW" do |worker|
-    worker.vm.box = "ubuntu/bionic64"
+    worker.vm.box = "debian/bookworm64"
     worker.vm.hostname = "rdel-agu.SW"
     worker.vm.network "private_network", ip: "192.168.56.111"
     worker.vm.provider "virtualbox" do |vb|
       vb.memory = "512"
       vb.cpus = 1
+      vb.customize ["modifyvm", :id, "--name", "rdel-aguSW"]
     end
   end
 end
