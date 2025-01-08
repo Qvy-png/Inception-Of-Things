@@ -15,6 +15,7 @@ Vagrant.configure("2") do |config|
       vb.memory = "512"
       vb.cpus = 1
       vb.customize ["modifyvm", :id, "--name", "rdel-aguS"]
+  config.vm.provision "shell", path: "script.sh"
     end
   end
 
