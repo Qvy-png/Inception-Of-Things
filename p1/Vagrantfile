@@ -1,26 +1,41 @@
 Vagrant.configure("2") do |config|
 
+  # using the penultimate version of debian
+  config.vm.box = "debian/bookworm64"
+
+  # installing mandatory tools
+  config.vm.provision "shell", inline: <<-SHELL
+    apt update
+    apt install -y net-tools curl
+  SHELL
+
+  # server
   config.vm.define "rdel-aguS" do |server|
-    server.vm.box = "debian/bookworm64"
     server.vm.hostname = "rdel-agu.S"
     server.vm.network "private_network", ip: "192.168.56.110"
     server.vm.provider "virtualbox" do |vb|
       vb.memory = "512"
       vb.cpus = 2
       vb.customize ["modifyvm", :id, "--name", "rdel-aguS"]
+      vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+      vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     end
     server.vm.provision "shell", path: "scripts/server.sh", args: ['192.168.1.110']
+
   end
 
+  # worker
   config.vm.define "rdel-aguSW" do |worker|
-    worker.vm.box = "debian/bookworm64"
     worker.vm.hostname = "rdel-agu.SW"
     worker.vm.network "private_network", ip: "192.168.56.111"
     worker.vm.provider "virtualbox" do |vb|
       vb.memory = "512"
       vb.cpus = 2
       vb.customize ["modifyvm", :id, "--name", "rdel-aguSW"]
+      vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+      vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     end
     worker.vm.provision "shell", path: "scripts/worker.sh", args: ['192.168.1.110']
+
   end
 end
