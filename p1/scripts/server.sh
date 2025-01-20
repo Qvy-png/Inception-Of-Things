@@ -1,17 +1,11 @@
 #!/bin/bash
 
-
-sudo apt update -y && sudo apt upgrade -y
-
-sudo apt install curl -y
-
 export K3S_KUBECONFIG_MODE="644"
-export INSTALL_K3S_EXEC="server --node-external-ip=$1 --bind-address=$1"
+export INSTALL_K3S_EXEC="server --node-external-ip=$1 --bind-address=$1 --flannel-iface=eth1"
 
-curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --server https://$1:6443" sh -
+curl -sfL https://get.k3s.io |  sh -
 [ $? -ne 0 ] && {
 	echo "K3S install failed."
-	journalctl -xeu k3s.service
 	exit 1
 }
 
