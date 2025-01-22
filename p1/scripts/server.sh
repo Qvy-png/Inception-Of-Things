@@ -18,7 +18,7 @@ while [ ! -f /var/lib/rancher/k3s/server/node-token ]; do
     TIMEOUT=$((TIMEOUT - 1))
     if [ "$TIMEOUT" -eq 0 ]; then
         echo "Token file not generated."
-        exit 1
+        exit 1                                                                                                                   
     fi
 done
 cp /var/lib/rancher/k3s/server/node-token /share/token

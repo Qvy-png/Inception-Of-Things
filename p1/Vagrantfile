@@ -14,7 +14,6 @@ Vagrant.configure("2") do |config|
 
   # server
   config.vm.define "rdel-aguS" do |server|
-    # server.vm.box = "debian/bookworm64"
     server.vm.hostname = "rdel-aguS"
     server.vm.provider "virtualbox" do |vb|
       vb.name = "rdel-aguS"
@@ -26,7 +25,6 @@ Vagrant.configure("2") do |config|
 
   # worker
   config.vm.define "rdel-aguSW" do |worker|
-    # worker.vm.box = "debian/bookworm64"
     worker.vm.hostname = "rdel-aguSW"
     worker.vm.provider "virtualbox" do |vb|
       vb.name = "rdel-aguSW"
