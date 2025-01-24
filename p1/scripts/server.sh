@@ -12,6 +12,8 @@ curl -sfL https://get.k3s.io |  sh -
 	exit 1
 }
 
+# waits for the token to be created
+TIMEOUT=30
 while [ ! -f /var/lib/rancher/k3s/server/node-token ]; do
     sleep 1
     TIMEOUT=$((TIMEOUT - 1))
@@ -20,7 +22,10 @@ while [ ! -f /var/lib/rancher/k3s/server/node-token ]; do
         exit 1                                                                                                                   
     fi
 done
+
+# sharing token
 cp /var/lib/rancher/k3s/server/node-token /share/token
 
+# kubectl alias -> k
 echo 'export PATH="/sbin:$PATH"' >> $HOME/.bashrc
 echo "alias k='kubectl'" | sudo tee /etc/profile.d/00-alias.sh > /dev/null

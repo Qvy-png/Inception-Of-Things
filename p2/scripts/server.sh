@@ -11,3 +11,14 @@ curl -sfL https://get.k3s.io |  sh -
 	echo "K3S install failed."
 	exit 1
 }
+
+# kubectl alias -> k
+echo 'export PATH="/sbin:$PATH"' >> $HOME/.bashrc
+echo "alias k='kubectl'" | sudo tee /etc/profile.d/00-alias.sh > /dev/null
+
+# web apps
+
+kubectl create configmap app-one --from-file /share/index.html
+kubectl apply -f /share/app-one.yml
+
+kubectl apply -f /share/ingress.yml
