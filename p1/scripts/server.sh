@@ -9,7 +9,6 @@ export INSTALL_K3S_EXEC="server --node-external-ip=$1 --bind-address=$1 --flanne
 curl -sfL https://get.k3s.io |  sh -
 [ $? -ne 0 ] && {
 	echo "K3S install failed."
-    journalctl -xeu k3s.service
 	exit 1
 }
 
