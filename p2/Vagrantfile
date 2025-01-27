@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
   end
 
   # sharing the project root with VMs
-  config.vm.synced_folder "./share", "/share"
+  config.vm.synced_folder "./config", "/share"
 
   # server
   config.vm.define "rdel-aguS" do |server|
