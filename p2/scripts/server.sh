@@ -18,8 +18,17 @@ echo "alias k='kubectl'" | sudo tee /etc/profile.d/00-alias.sh > /dev/null
 
 # web apps
 
+# app1
 kubectl create configmap app-one --from-file /share/app1/index.html
 kubectl apply -f /share/app1/deployment.yml
 kubectl apply -f /share/app1/service.yml
+# app2
+kubectl create configmap app-two --from-file /share/app2/index.html
+kubectl apply -f /share/app2/deployment.yml
+kubectl apply -f /share/app2/service.yml
+# app 3
+kubectl create configmap app-three --from-file /share/app3/index.html
+kubectl apply -f /share/app3/deployment.yml
+kubectl apply -f /share/app3/service.yml
 
 kubectl apply -f /share/ingress.yml
