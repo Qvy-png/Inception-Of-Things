@@ -1,29 +1,63 @@
 #!/bin/bash
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+NC='\033[0m'
+
+K3D_PATH="/usr/local/bin/k3d"
+KUBECTL_PATH="/usr/local/bin/kubectl"
+ARGOCD_PATH="/usr/local/bin/argocd"
+
+
 if [ "$(id -u)" -ne 0 ] && [ -z "$SUDO_UID" ] && [ -z "$SUDO_USER" ]; then
 	printf "${RED}[LINUX]${NC} - Permission denied. Please run the command with sudo privileges.\n"
 	exit 87
 fi
 
-echo "[INSTALL_SH]Updating . . .\n"
-apt update > /dev/null
+echo -e "${YELLOW}[INSTALL_SH]${NC} - Updating . . ."
+apt-get -qq update > /dev/null
 
 # tools
 ## curl net-tools docker
-apt install curl net-tools docker.io -y
+apt-get -qq install curl net-tools docker.io -y > /dev/null
 
 # systemctl
 systemctl start docker
 systemctl enable docker
 
 ## k3d
-curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+[ ! -f $K3D_PATH ] && {
+    echo -e "${YELLOW}[INSTALL_SH]${NC} - installing k3d"
+    curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash > /dev/null
+    RET="$?"
+    [ ! $RET -eq "0" ] && {
+        echo -e "${RED}[INSTALL_SH]${NC} - error installing k3d"
+    } || {
+        echo -e "${GREEN}[INSTALL_SH]${NC} - installation complete!"
+    }
+} || {
+    echo -e "${GREEN}[INSTALL_SH]${NC} - k3d already installed"
+}
+## kubectl
+[ ! -f $KUBECTL_PATH ] && {
+    echo -e "${YELLOW}[INSTALL_SH]${NC} - installing kubectl"
+    curl -LOs https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl
+    chmod +x kubectl
+    mv kubectl /usr/local/bin/
+} || {
+    echo -e "${GREEN}[INSTALL_SH]${NC} - kubectl already installed"
+}
 
-## kubectl #TODO check if kubectl already exists
-# [ ]
-curl -LO https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl
-chmod +x kubectl
-mv kubectl /usr/local/bin/
+## argoCD
+[ ! -f $ARGOCD_PATH ] && {
+    echo -e "${YELLOW}[INSTALL_SH]${NC} - installing argocd"
+    curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+    chmod +x argocd
+    sudo mv argocd /usr/local/bin/
+} || {
+    echo -e "${GREEN}[INSTALL_SH]${NC} - argocd already installed"
+}
 
 # alias
 # kubectl alias -> k
