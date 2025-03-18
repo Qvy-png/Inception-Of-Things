@@ -34,7 +34,7 @@ systemctl enable docker
     [ ! $RET -eq "0" ] && {
         echo -e "${RED}[INSTALL_SH]${NC} - error installing k3d"
     } || {
-        echo -e "${GREEN}[INSTALL_SH]${NC} - installation complete!"
+        echo -e "${GREEN}[INSTALL_SH]${NC} - k3d installation complete!"
     }
 } || {
     echo -e "${GREEN}[INSTALL_SH]${NC} - k3d already installed"
@@ -43,8 +43,16 @@ systemctl enable docker
 [ ! -f $KUBECTL_PATH ] && {
     echo -e "${YELLOW}[INSTALL_SH]${NC} - installing kubectl"
     curl -LOs https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl
+    RET="$?"
     chmod +x kubectl
     mv kubectl /usr/local/bin/
+    [ ! $RET -eq "0" ] && {
+        echo -e "${RED}[INSTALL_SH]${NC} - error installing kubectl"
+    } || {
+        [ -f $KUBECTL_PATH ] && {
+            echo -e "${GREEN}[INSTALL_SH]${NC} - kubectl installation complete!"
+        }
+    }
 } || {
     echo -e "${GREEN}[INSTALL_SH]${NC} - kubectl already installed"
 }
@@ -53,8 +61,16 @@ systemctl enable docker
 [ ! -f $ARGOCD_PATH ] && {
     echo -e "${YELLOW}[INSTALL_SH]${NC} - installing argocd"
     curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+    RET="$?"
     chmod +x argocd
     sudo mv argocd /usr/local/bin/
+    [ ! $RET -eq "0" ] && {
+        echo -e "${RED}[INSTALL_SH]${NC} - error installing argoCD"
+    } || {
+        [ -f $ARGOCD_PATH ] && {
+            echo -e "${GREEN}[INSTALL_SH]${NC} - argoCD installation complete!"
+        }
+    }
 } || {
     echo -e "${GREEN}[INSTALL_SH]${NC} - argocd already installed"
 }
