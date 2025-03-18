@@ -9,7 +9,6 @@ K3D_PATH="/usr/local/bin/k3d"
 KUBECTL_PATH="/usr/local/bin/kubectl"
 ARGOCD_PATH="/usr/local/bin/argocd"
 
-
 if [ "$(id -u)" -ne 0 ] && [ -z "$SUDO_UID" ] && [ -z "$SUDO_USER" ]; then
 	printf "${RED}[LINUX]${NC} - Permission denied. Please run the command with sudo privileges.\n"
 	exit 87
@@ -39,6 +38,7 @@ systemctl enable docker
 } || {
     echo -e "${GREEN}[INSTALL_SH]${NC} - k3d already installed"
 }
+
 ## kubectl
 [ ! -f $KUBECTL_PATH ] && {
     echo -e "${YELLOW}[INSTALL_SH]${NC} - installing kubectl"
