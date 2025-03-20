@@ -26,7 +26,7 @@ if sudo k3d cluster list | grep -q "$USERNAME"; then
 	printf "${RED}[LAUNCH_SH]${NC} - A cluster named $USERNAME already exists.\n"
 	exit 1
 else
-	if ! sudo k3d cluster create $USERNAME --port 80:80 --servers 1 --agents 3; then
+	if ! sudo k3d cluster create $USERNAME; then
         echo -e "${RED}[LAUNCH_SH]${NC} - Cluster creation failed! Do you have k3d installed and is the Docker service running?${NC}"
         exit 1
     fi
@@ -36,16 +36,25 @@ export KUBECONFIG="$(sudo k3d kubeconfig write "$USERNAME")"
 
 ## ARGOCD PART
 
-# HOST_ENTRY=""
-
 sudo kubectl create namespace argocd && sudo kubectl create namespace dev
 sudo kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
-# if grep -q "$HOST_ENTRY" "$HOSTS_FILE"; then
-#     echo "exist $HOSTS_FILE"
-# else
-#     echo "adding $HOSTS_FILE"
-#     echo "$HOST_ENTRY" | sudo tee -a "$HOSTS_FILE"
-# fi
+HOST_ENTRY="127.0.0.1 argocd.mydomain.com"
+HOSTS_FILE="/etc/hosts"
+
+if grep -q "$HOST_ENTRY" "$HOSTS_FILE"; then
+    echo "exist $HOSTS_FILE"
+else
+    echo "adding $HOSTS_FILE"
+    echo "$HOST_ENTRY" | sudo tee -a "$HOSTS_FILE"
+fi
+
+sudo kubectl wait --for=condition=ready --timeout=600s pod --all -n argocd
+
+echo -ne "${GREEN}ARGOCD PASSWORD : "
+  sudo kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 --decode
+echo "${RESET}"
+
+sudo kubectl port-forward svc/argocd-server -n argocd 8085:443 > /dev/null 2>&1 &
 
 ## DEV PART

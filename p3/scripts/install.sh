@@ -75,6 +75,10 @@ systemctl enable docker
     echo -e "${GREEN}[INSTALL_SH]${NC} - argocd already installed"
 }
 
+## dev
+kubectl apply -f ../confs/deploy.yml
+# echo -e "${GREEN}[INSTALL_SH] - port forwarded : sudo kubectl port-forward -n dev 8888:8080${RESET}"
+
 # alias
 # kubectl alias -> k
 echo 'export PATH="/sbin:$PATH"' >> $HOME/.bashrc
