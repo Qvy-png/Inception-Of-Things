@@ -19,7 +19,7 @@ apt-get -qq update > /dev/null
 
 # tools
 ## curl net-tools docker
-apt-get -qq install curl net-tools docker.io -y > /dev/null
+apt-get -qq install curl net-tools git docker.io -y > /dev/null
 
 # systemctl
 systemctl start docker
