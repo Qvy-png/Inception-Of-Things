@@ -76,7 +76,7 @@ systemctl enable docker
 }
 
 ## dev
-kubectl apply -f ../confs/deploy.yml
+kubectl apply -f ./confs/deploy.yml
 # echo -e "${GREEN}[INSTALL_SH] - port forwarded : sudo kubectl port-forward -n dev 8888:8080${RESET}"
 
 # alias

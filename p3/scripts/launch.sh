@@ -26,7 +26,7 @@ if sudo k3d cluster list | grep -q "$USERNAME"; then
     printf "${RED}[LAUNCH_SH]${NC} - A cluster named $USERNAME already exists.\n"
     exit 1
 else
-    if ! sudo k3d cluster create $USERNAME; then
+    if ! sudo k3d cluster create $USERNAME -p "8888:8888@loadbalancer"; then
         echo -e "${RED}[LAUNCH_SH]${NC} - Cluster creation failed! Do you have k3d installed and is the Docker service running?${NC}"
         exit 1
     fi
@@ -75,7 +75,8 @@ argocd login localhost:8080 --username admin --password "$ARGOCD_PWD" --insecure
 
 # Apply the ArgoCD application
 echo -e "${YELLOW}[LAUNCH_SH]${NC} - Deploying application..."
-sudo kubectl apply -f confs/deploy.yml
+
+sudo kubectl apply -f ./confs/deploy.yml
 
 echo -e "${GREEN}[LAUNCH_SH]${NC} - All set! Access ArgoCD at https://localhost:8080"
 
